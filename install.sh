@@ -4,6 +4,11 @@ cd "$(dirname "${BASH_SOURCE}")"
 
 git pull origin master
 
+function installPackages() {
+  sudo apt-get update -qq 
+  sudo apt-get install -y xclip
+}
+
 function writeFiles() {
   rsync --exclude=".git/" \
         --exclude="install.sh" \
@@ -30,6 +35,7 @@ read -p "This may overwrite existing files in your home directory. Are you sure?
 echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
+  installPackages
   installVundle
   writeFiles
 fi;
