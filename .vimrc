@@ -1,6 +1,19 @@
 set et ts=2 sw=2
 
 set nocompatible
+filetype off
+
+" set the runtime path to include vundle
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/.vundle-packages')
+
+" Let vundle manage vundle
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'christoomey/vim-tmux-navigator'
+
+call vundle#end()
+filetype plugin indent on
 
 " Put swapfiles into a tmp directory
 set backupdir=~/.tmp
