@@ -124,3 +124,6 @@ fi
 if [ -f ~/.env ]; then
   . ~/.env;
 fi
+
+
+eval "$(rbenv init -)"
