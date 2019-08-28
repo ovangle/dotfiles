@@ -122,7 +122,7 @@ if [ -f ~/.bash_prompt ]; then
 fi
 
 if [ -f ~/.env ]; then
-  . ~/.env;
+  export $(egrep -v '^#' ~/.env | xargs)
 fi
 
 
