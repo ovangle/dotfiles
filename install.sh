@@ -31,14 +31,32 @@ function installVundle() {
   fi
 }
 
+
 read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1;
 echo ""
+
+gitConfigConfirm='N'
+
+while ! [[ $gitConfigConfirm =~ ^[Yy] ]]; do
+  ## Allow the installer to configure the git name and email
+  ## Rather than binding them in the .gitconfig
+  read -p "Your name as you would like it to appear in git commit messages: " gitName;
+  read -p "Your email as you would like it to appear in git commit message: " gitEmail;
+
+  echo "git username: \"$gitName\" git email: \"$gitEmail\""
+  read -p "Is this correct (y/n) " -n 1 $git_config_correct gitConfigConfirm;
+  echo ""
+done
+
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   installPackages
   installVundle
   writeFiles
 fi;
+
+git config --global user.name "$gitName";
+git config --global user.email "$gitEmail";
 
 unset installVundle;
 unset writeFiles;
