@@ -127,3 +127,5 @@ fi
 
 
 eval "$(rbenv init -)"
+
+source "$HOME/.connect-1password-ssh-agent-bridge.sh";

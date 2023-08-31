@@ -6,7 +6,7 @@ git pull origin master
 
 function installPackages() {
   sudo apt-get update -qq 
-  sudo apt-get install -y xclip
+  sudo apt-get install -y xclip socat
 }
 
 function writeFiles() {
