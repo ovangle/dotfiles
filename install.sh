@@ -50,14 +50,17 @@ done
 
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
+  mkdir -p "$HOME/.tmp"
+
   installPackages
   installVundle
   writeFiles
+
+  git config --global user.name "$gitName";
+  git config --global user.email "$gitEmail";
 fi;
 
-git config --global user.name "$gitName";
-git config --global user.email "$gitEmail";
-
+unset installPackages;
 unset installVundle;
 unset writeFiles;
 

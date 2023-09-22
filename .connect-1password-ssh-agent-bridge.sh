@@ -15,14 +15,15 @@ fi
 mkdir -p "$HOME/.1password"
 export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 
-ALREADY_RUNNING=$(ps -auxww | grep -q "[n]piperelay.exe -ei //./pipe/openssh-ssh-agent"; echo $?)
+ALREADY_RUNNING=$(ps -auxww | grep -q "[n]piperelay.exe .* //./pipe/openssh-ssh-agent"; echo $?)
 
 if [[ $ALREADY_RUNNING != "0" ]]; then
-    if [[ -s $SSH_AUTH_SOCK ]]; then
+
+    echo "Starting 1password SSH-agent...";
+    if [[ -S $SSH_AUTH_SOCK ]]; then
         echo "removing previous ssh socket";
         rm $SSH_AUTH_SOCK;
     fi
-    echo "Starting 1password SSH-agent...";
     # setsid to force new session to keep running
 
     # set socat to listen on $SSH_AUTH_SOCK and forward to npiperelay which then forwards to openssh-ssh-agent on windows
