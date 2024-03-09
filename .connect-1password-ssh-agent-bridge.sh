@@ -15,17 +15,21 @@ fi
 mkdir -p "$HOME/.1password"
 export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 
-ALREADY_RUNNING=$(ps -auxww | grep -q "[n]piperelay.exe .* //./pipe/openssh-ssh-agent"; echo $?)
+ALREADY_RUNNING=$(ps -auxww | grep "[n]piperelay.exe .* -s //./pipe/openssh-ssh-agent" | awk '{print $2}') 
 
-if [[ $ALREADY_RUNNING != "0" ]]; then
-
-    echo "Starting 1password SSH-agent...";
-    if [[ -S $SSH_AUTH_SOCK ]]; then
-        echo "removing previous ssh socket";
-        rm $SSH_AUTH_SOCK;
-    fi
-    # setsid to force new session to keep running
-
-    # set socat to listen on $SSH_AUTH_SOCK and forward to npiperelay which then forwards to openssh-ssh-agent on windows
-    (setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork &) >/dev/null 2>&1
+if [[ -n "$ALREADY_RUNNING" ]]; then
+  echo "Agent is already running with PID '${ALREADY_RUNNING}'"
+  kill "${ALREADY_RUNNING}"
 fi
+
+if [[ -S $SSH_AUTH_SOCK ]]; then
+  echo "removing previous ssh socket";
+  rm "$SSH_AUTH_SOCK";
+fi
+# setsid to force new session to keep running
+# set socat to listen on $SSH_AUTH_SOCK 
+# forward to npiperelay which then forwards to openssh-ssh-agent on windows
+
+echo "Connecting 1password to host agent.."
+(setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork &);
+
